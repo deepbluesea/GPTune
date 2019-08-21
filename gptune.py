@@ -123,11 +123,12 @@ def main():
         all_vars = [v for v in tf.trainable_variables() if 'model' in v.name]
         train_vars = [v for v in all_vars if '/h' in v.name] if args.only_train_transformer_layers else all_vars
         if args.truncate_training>0:
+            print('Training Variables before:', len(train_vars))
             train_vars = train_vars[-args.truncate_training:]
-        # print('Training Variables:', len(train_vars))
+            print('Training Variables after:', len(train_vars))
 
         if args.optimizer == 'adam':
-            opt = tf.train.AdamOptimizer(learning_rate=args.learning_rate)
+            opt = tf.train.AdadeltaOptimizer(learning_rate=1.0)
         elif args.optimizer == 'sgd':
             opt = tf.train.GradientDescentOptimizer(learning_rate=args.learning_rate)
         else:
